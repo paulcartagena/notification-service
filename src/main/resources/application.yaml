@@ -1,0 +1,27 @@
+spring:
+  application:
+    name: notification-service
+
+---
+spring:
+  config:
+    activate:
+      on-profile: dev
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/${DB_NAME}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    open-in-view: false
+
+sendgrid:
+  api-key:
+
+api:
+  key: ${API_KEY}
+
