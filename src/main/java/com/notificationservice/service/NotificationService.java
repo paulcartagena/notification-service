@@ -40,7 +40,7 @@ public class NotificationService {
         notification.setCreatedAt(LocalDateTime.now());
 
         Notification saved = notificationRepository.save(notification);
-        return buildResponse(notification);
+        return buildResponse(saved);
     }
 
     @Transactional(readOnly = true)
