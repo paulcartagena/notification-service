@@ -1,5 +1,6 @@
 package com.notificationservice.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.notificationservice.dto.NotificationRequestDTO;
 import com.notificationservice.dto.NotificationResponseDTO;
 import com.notificationservice.model.Notification;
@@ -12,7 +13,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import tools.jackson.databind.ObjectMapper;
 
 import java.util.List;
 import java.util.Map;
@@ -36,7 +36,7 @@ public class NotificationServiceTest {
     private NotificationService notificationService;
 
     @Test
-    void shouldSendNotificationSuccessfully() {
+    void shouldSendNotificationSuccessfully() throws Exception {
         NotificationRequestDTO dto = new NotificationRequestDTO();
         dto.setRecipient("paul@gmail.com");
         dto.setTemplate(TemplateType.WELCOME);
@@ -52,7 +52,7 @@ public class NotificationServiceTest {
         savedNotification.setStatus(NotificationStatus.PENDING);
 
         when(objectMapper.writeValueAsString(dto.getPayload()))
-                .thenReturn("{\\\"name\\\":\\\"Paul\\\",\\\"email\\\":\\\"paul@gmail.com\\\"}");
+                .thenReturn("{\"name\":\"Paul\",\"email\":\"paul@gmail.com\"}");
         when(notificationRepository.save(any(Notification.class)))
                 .thenReturn(savedNotification);
 

@@ -1,5 +1,7 @@
 package com.notificationservice.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.notificationservice.dto.NotificationRequestDTO;
 import com.notificationservice.dto.NotificationResponseDTO;
 import com.notificationservice.exception.NotificationNotFound;
@@ -9,7 +11,6 @@ import com.notificationservice.model.enums.NotificationType;
 import com.notificationservice.repository.NotificationRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import tools.jackson.databind.ObjectMapper;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -28,19 +29,23 @@ public class NotificationService {
     }
 
     public NotificationResponseDTO send(NotificationRequestDTO dto) {
-        String payloadJson = objectMapper.writeValueAsString(dto.getPayload());
+        try {
+            String payloadJson = objectMapper.writeValueAsString(dto.getPayload());
 
-        Notification notification = new Notification();
-        notification.setRecipient(dto.getRecipient());
-        notification.setType(dto.getType() != null ? dto.getType() : NotificationType.EMAIL);
-        notification.setTemplate(dto.getTemplate());
-        notification.setPayload(payloadJson);
-        notification.setStatus(NotificationStatus.PENDING);
-        notification.setAttempts(0);
-        notification.setCreatedAt(LocalDateTime.now());
+            Notification notification = new Notification();
+            notification.setRecipient(dto.getRecipient());
+            notification.setType(dto.getType() != null ? dto.getType() : NotificationType.EMAIL);
+            notification.setTemplate(dto.getTemplate());
+            notification.setPayload(payloadJson);
+            notification.setStatus(NotificationStatus.PENDING);
+            notification.setAttempts(0);
+            notification.setCreatedAt(LocalDateTime.now());
 
-        Notification saved = notificationRepository.save(notification);
-        return buildResponse(saved);
+            Notification saved = notificationRepository.save(notification);
+            return buildResponse(saved);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException("Error serializing payload.");
+        }
     }
 
     @Transactional(readOnly = true)
