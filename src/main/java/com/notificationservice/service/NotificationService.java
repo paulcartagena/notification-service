@@ -21,11 +21,14 @@ public class NotificationService {
 
     private final NotificationRepository notificationRepository;
     private final ObjectMapper objectMapper;
+    private final EmailSenderService emailSenderService;
 
     public NotificationService(NotificationRepository notificationRepository,
-                               ObjectMapper objectMapper) {
+                               ObjectMapper objectMapper,
+                               EmailSenderService emailSenderService) {
         this.notificationRepository = notificationRepository;
         this.objectMapper = objectMapper;
+        this.emailSenderService = emailSenderService;
     }
 
     public NotificationResponseDTO send(NotificationRequestDTO dto) {
@@ -42,6 +45,7 @@ public class NotificationService {
             notification.setCreatedAt(LocalDateTime.now());
 
             Notification saved = notificationRepository.save(notification);
+            emailSenderService.processNotification(saved);
             return buildResponse(saved);
         } catch (JsonProcessingException e) {
             throw new RuntimeException("Error serializing payload.");
