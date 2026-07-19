@@ -20,7 +20,8 @@ spring:
     open-in-view: false
 
 sendgrid:
-  api-key:
+  api-key: ${SENDGRID_API_KEY}
+  from-email: ${SENDGRID_FROM_EMAIL}
 
 api:
   key: ${API_KEY}
