@@ -19,10 +19,27 @@ spring:
     show-sql: true
     open-in-view: false
 
+---
+spring:
+  config:
+    activate:
+      on-profile: prod
+
+  datasource:
+    url: ${SUP_URL}
+    username: ${SUP_USERNAME}
+    password: ${SUP_PASSWORD}
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+    open-in-view: false
+
+---
 sendgrid:
   api-key: ${SENDGRID_API_KEY}
   from-email: ${SENDGRID_FROM_EMAIL}
 
 api:
   key: ${API_KEY}
-
